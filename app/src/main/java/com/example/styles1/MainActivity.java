@@ -43,44 +43,58 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
         /**
-        *SQLite
-        *hard coded
-        *WIP , separate class needs to be called
-        * @author Shakhawat Hossain
-         **/
-
-        SQLiteDatabase db = null;
-        try{
-            // Creates MyDB Database
-            db = openOrCreateDatabase("MyDB", MODE_PRIVATE, null);
-
-            db.execSQL("DROP TABLE IF EXISTS MyTable");
-
-            //Creating Table MyTable, Column name LastName, FirstName, Age
-            db.execSQL("CREATE TABLE IF NOT EXISTS MyTable(LastName VARCHAR, FirstName VARCHAR, Age INT(3));");
-            // Adding Values
-            db.execSQL("INSERT INTO MyTable VALUES ('Hossain', 'Shakhawat', 30);");
-
-            Cursor C = db.rawQuery("Select * From MyTable", null);
-            C.moveToFirst();
-
-            System.out.println(C.getString(C.getColumnIndex("FirstName")));
-            System.out.println(C.getString(C.getColumnIndex("LastName")));
-            System.out.println(C.getString(C.getColumnIndex("Age")));
-
-            Log.d("Shakhawat", C.getString(C.getColumnIndex("FirstName")));
-
-        } catch (Exception e){
-            Log.d("Error", e.toString());
-        }finally {
-            db.close();
-        }
-
-
+         * calling the SQLite db to store data
+         * @author SH
+         */
+        System.out.println(SQLiteDB(10.123456, 20.123456, 30.123456));
 
     }
+
+
+    /**
+     * This SQLite method will take input and store it into a Team3Raptor
+     * table name MyTable
+     * input data type double
+     * returns string
+     *
+     * @return column_1 string data
+     *
+     * @param input1
+     * @param input2
+     * @param input3
+     *
+     * @author Shakhawat Hossain
+     */
+    public String SQLiteDB(double input1, double input2, double input3) {
+        SQLiteDatabase db;
+        db = openOrCreateDatabase("Team3Raptor", MODE_PRIVATE, null);
+        try{
+            db.execSQL("Drop Table If Exists MyTable");
+            Log.d("Info", "Table Deleted");
+
+            db.execSQL("Create Table If Not Exists MyTable(Column_1 INT(10), Column_2 INT(10), Column_3 INT(10));" );
+            Log.d("Info", "Table Created");
+
+            db.execSQL("INSERT INTO MyTable VALUES ("+ input1 + "," + input2 + "," + input3 + ");");
+
+            Log.d("Info", "Data inserted");
+        } catch (Exception e){
+            Log.e("Error", e.toString());
+        }
+
+        Cursor C = db.rawQuery("Select * From MyTable", null);
+        C.moveToFirst();
+
+//        System.out.println(C.getString(C.getColumnIndex("Column_1")));
+//        System.out.println(C.getString(C.getColumnIndex("Column_2")));
+//        System.out.println(C.getString(C.getColumnIndex("Column_3")));
+
+        Log.d("Column 1 data", C.getString(C.getColumnIndex("Column_1")));
+        return C.getString(C.getColumnIndex("Column_1"));
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

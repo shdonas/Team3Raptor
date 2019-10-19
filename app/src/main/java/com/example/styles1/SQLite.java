@@ -8,42 +8,45 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * hard Coded
- * author Shakhawat Hossain
+ * This SQLite method will take input and store it into a Team3Raptor
+ * table name MyTable
+ * input data type double
+ *
+ * @param input1
+ * @param input2
+ * @param input3
+ *
+ * @author Shakhawat Hossain
  */
 public class SQLite extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    public void SQLiteDB(double input1, double input2, double input3) {
+        SQLiteDatabase db;
+        try{
+            db = openOrCreateDatabase("Team3Raptor", MODE_PRIVATE, null);
 
-    SQLiteDatabase db = null;
-    try{
+            db.execSQL("Drop Table If Exists MyTable");
+            Log.d("Info", "Table Deleted");
 
-        // Creates MyDB Database
-        db = openOrCreateDatabase("MyDB", MODE_PRIVATE, null);
+//            db.execSQL("Create Table If Not Exists MyTable(LastName VARCHAR, FirstName VARCHAR, Age INT(3));" );
+            db.execSQL("Create Table If Not Exists MyTable(Column_1 INT(10), Column_2 INT(10), Column_3 INT(10));" );
+            Log.d("Info", "Table Created");
 
-        db.execSQL("DROP TABLE IF EXISTS MyTable");
+            db.execSQL("INSERT INTO MyTable VALUES ("+ input1 + "," + input2 + "," + input3 + ");");
 
-        //Creating Table MyTable, Column name LastName, FirstName, Age
-        db.execSQL("CREATE TABLE IF NOT EXISTS MyTable(LastName VARCHAR, FirstName VARCHAR, Age INT(3));");
-        // Adding Values
-        db.execSQL("INSERT INTO MyTable VALUES ('Hossain', 'Shakhawat', 30);");
+            Log.d("Info", "Data inserted");
 
-        Cursor C = db.rawQuery("Select * From MyTable", null);
-        C.moveToFirst();
+            Cursor C = db.rawQuery("Select * From MyTable", null);
+            C.moveToFirst();
 
-        System.out.println(C.getString(C.getColumnIndex("FirstName")));
-        System.out.println(C.getString(C.getColumnIndex("LastName")));
-        System.out.println(C.getString(C.getColumnIndex("Age")));
+            System.out.println(C.getString(C.getColumnIndex("Column_1")));
+            System.out.println(C.getString(C.getColumnIndex("Column_2")));
+            System.out.println(C.getString(C.getColumnIndex("Column_3")));
 
-        Log.d("Shakhawat", C.getString(C.getColumnIndex("FirstName")));
+            Log.d("Column 1 data", C.getString(C.getColumnIndex("Column_1")));
 
-    } catch (Exception e){
-        Log.d("Error", e.toString());
-    }finally {
-        db.close();
+        } catch (Exception e){
+            Log.e("Error", e.toString());
+        }
     }
-}
 }
